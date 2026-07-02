@@ -1,3 +1,7 @@
 swim-coach-ai.com {
     respond "Coming soon" 200
 }
+
+www.swim-coach-ai.com {
+    redir https://swim-coach-ai.com{uri} permanent
+}
