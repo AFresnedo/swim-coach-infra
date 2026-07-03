@@ -2,7 +2,7 @@
     basicauth {
         {$BASIC_AUTH_USER} {$BASIC_AUTH_HASH}
     }
-    respond "Coming soon" 200
+    reverse_proxy frontend:3000
 }
 
 www.{$DOMAIN} {
