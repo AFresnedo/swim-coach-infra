@@ -1,4 +1,7 @@
 swim-coach-ai.com {
+    basicauth {
+        {$BASIC_AUTH_USER} {$BASIC_AUTH_HASH}
+    }
     respond "Coming soon" 200
 }
 
