@@ -24,7 +24,7 @@ chown -R deploy:deploy /home/deploy/.ssh
 
 ### 3. Clone this repo
 ```bash
-git clone https://github.com/AFresnedo/infra.git /infra
+git clone https://github.com/AFresnedo/swim-coach-infra.git /infra
 chown -R deploy:deploy /infra
 ```
 
