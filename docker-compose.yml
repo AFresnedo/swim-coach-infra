@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
 services:
   caddy:
     image: caddy:2-alpine
@@ -16,6 +22,7 @@ services:
       - caddy_config:/config
     networks:
       - swimcoach
+    logging: *default-logging
 
   backend:
     image: ${BACKEND_IMAGE}
@@ -29,6 +36,7 @@ services:
         condition: service_healthy
     networks:
       - swimcoach
+    logging: *default-logging
 
   frontend:
     image: ${FRONTEND_IMAGE}
@@ -44,6 +52,7 @@ services:
         # the whole subnet. Keep this in sync with the backend Dockerfile's
         # --forwarded-allow-ips value if this ever changes.
         ipv4_address: 172.28.0.10
+    logging: *default-logging
 
   postgres:
     image: pgvector/pgvector:pg17
@@ -61,6 +70,7 @@ services:
       retries: 5
     networks:
       - swimcoach
+    logging: *default-logging
 
 networks:
   swimcoach:
