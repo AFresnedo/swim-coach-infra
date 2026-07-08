@@ -14,22 +14,36 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
+    networks:
+      - swimcoach
 
   backend:
     image: ${BACKEND_IMAGE}
     restart: unless-stopped
     environment:
+      ENVIRONMENT: production
       DATABASE_URL: ${DATABASE_URL}
-      SECRET_KEY: ${SECRET_KEY}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY must be set (see .env.example)}
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - swimcoach
 
   frontend:
     image: ${FRONTEND_IMAGE}
     restart: unless-stopped
     environment:
       API_URL: http://backend:8000
+      SITE_INDEXABLE: ${SITE_INDEXABLE:-false}
+    networks:
+      swimcoach:
+        # Pinned so the backend's uvicorn --forwarded-allow-ips can trust
+        # exactly this one address for X-Forwarded-For (real client IP,
+        # forwarded by the frontend's own server-side BFF layer) rather than
+        # the whole subnet. Keep this in sync with the backend Dockerfile's
+        # --forwarded-allow-ips value if this ever changes.
+        ipv4_address: 172.28.0.10
 
   postgres:
     image: pgvector/pgvector:pg17
@@ -45,6 +59,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - swimcoach
+
+networks:
+  swimcoach:
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
 
 volumes:
   postgres_data:
