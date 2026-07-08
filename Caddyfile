@@ -1,7 +1,4 @@
 {$DOMAIN} {
-    basic_auth {
-        {$BASIC_AUTH_USER} {$BASIC_AUTH_HASH}
-    }
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
         X-Content-Type-Options "nosniff"
