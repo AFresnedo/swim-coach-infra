@@ -41,14 +41,22 @@ docker compose -f /infra/docker-compose.yml up -d postgres
 docker compose -f /infra/docker-compose.yml exec postgres psql -U postgres -d swimcoach -c "CREATE EXTENSION IF NOT EXISTS vector;"
 ```
 
-### 7. Enable unattended security upgrades with auto-reboot
+### 7. Start redis
+```bash
+docker compose -f /infra/docker-compose.yml up -d redis
+```
+The CD pipeline's deploy step runs `docker compose up -d --no-deps backend`, which never
+starts `redis` itself - it must already be running and healthy or `backend` will never
+satisfy its `depends_on: condition: service_healthy` and fail to start.
+
+### 8. Enable unattended security upgrades with auto-reboot
 Edit `/etc/apt/apt.conf.d/50unattended-upgrades` and uncomment:
 ```
 Unattended-Upgrade::Automatic-Reboot "true";
 Unattended-Upgrade::Automatic-Reboot-Time "03:00";
 ```
 
-### 8. Start Caddy
+### 9. Start Caddy
 ```bash
 docker compose -f /infra/docker-compose.yml up -d --no-deps caddy
 ```
