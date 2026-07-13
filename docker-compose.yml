@@ -45,6 +45,7 @@ services:
     environment:
       API_URL: http://backend:8000
       SITE_INDEXABLE: ${SITE_INDEXABLE:-false}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:?TURNSTILE_SECRET_KEY must be set (see .env.example)}
     networks:
       swimcoach:
         # Pinned so the backend's uvicorn --forwarded-allow-ips can trust
